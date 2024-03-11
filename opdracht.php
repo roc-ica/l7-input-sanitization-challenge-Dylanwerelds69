@@ -14,6 +14,7 @@
     $userMessage = $_GET['message'] ?? '';
 
     // Toon het ingevoerde bericht zonder sanitatie (onveilig)
+
     echo "<p>Ongesaneerd bericht: $userMessage</p>";
 
     // Toon het ingevoerde bericht met HTML-sanitatie (deel van XSS-preventie)
@@ -24,11 +25,29 @@
 
     // Voeg het bericht toe aan een database met een enkele tabel
     // Zorg voor eigen credentials voor deze database
-    // Maak gebruik van prepared statements om SQL-injectie te voorkomen 
+    // Maak gebruik van prepared statements om SQL-injectie te voorkomen
 
     // je code hier...
 
-?>
+    $servername = "localhost";
+    $username = "dw";
+    $password = "dw";
+    $dbname = "opdracht";
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $stmt = $conn->prepare("INSERT INTO message (message) VALUES (?)");
+    $stmt->bind_param("s", $userMessage);
+
+    $stmt->execute();
+
+    $stmt->close();
+    $conn->close();
+    ?>
 
     <hr>
 
